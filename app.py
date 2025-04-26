@@ -61,10 +61,12 @@ class CameraApp:
         self.start_button = Button(left_frame, text="Open Camera", command=self.start_preview)
         self.start_button.grid(row=0,column=0)
 
+        #self.audio_thread = threading.Thread(target=self.update_text, daemon=True)
+
     def start_preview(self):
         self.label_widget.grid(row=0,column=0)
         self.open_camera()
-        self.update_text()
+        #self.update_text()
 
     def open_camera(self):
 
@@ -119,15 +121,15 @@ class CameraApp:
             text_start = result.find('"text" : "') + len('"text" : "')
             text_end = result.find('"', text_start)
             spoken_text = result[text_start:text_end] if text_start != -1 and text_end != -1 else ""
-            self.cur_subs.set(spoken_text)
+            #self.cur_subs.set(spoken_text)
         else:
             partial = self.rec.PartialResult()
             partial_start = partial.find('"partial" : "') + len('"partial" : "')
             partial_end = partial.find('"', partial_start)
             partial_text = partial[partial_start:partial_end] if partial_start != -1 and partial_end != -1 else ""
-            self.cur_subs.set(partial_text)
+            #self.cur_subs.set(partial_text)
 
-        root.after(250, self.update_text)  # Call again after 100ms
+        root.after(100, self.update_text)  # Call again after 100ms
         
     def quit_app(self):
         # Beende die Anwendung und gib die Kamera frei
