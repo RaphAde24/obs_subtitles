@@ -1,10 +1,14 @@
 from tkinter import *
+from customtkinter import *
 import cv2
 from PIL import Image, ImageTk
 from vosk import Model, KaldiRecognizer
 import pyaudio
 
 # Vosk model path (you can download one from https://alphacephei.com/vosk/models)
+#class CustomComboCox:
+#    def __init__(self, parent,button, elements):
+#        self=Frame(button)
 
 
 class CameraApp:
@@ -24,7 +28,8 @@ class CameraApp:
         # Initialisiere die Hauptanwendung
         self.root = root
         self.root.title("Camera App")
-        self.root.geometry("1920x1080")
+        #self.root.geometry("1920x1080")
+        self.root.geometry("1280x720")
         self.root.bind('<Escape>', lambda e: self.quit_app())
 
         # Kamera-Setup
@@ -39,32 +44,50 @@ class CameraApp:
         self.prev_width=800
         self.prev_height=int(self.h_w*self.prev_width)
         
+        self.root.geometry(str(1000)+"x720")
         #subtitles
         self.cur_subs.set("beispiel text")
 
         self.root.columnconfigure(0,weight=1)
-        self.root.columnconfigure(1,weight=0)
+        #self.root.columnconfigure(1,weight=0)
         self.root.rowconfigure((0),weight=1)
-        left_frame=Frame(self.root, bg="#222831")
-        left_frame.grid(row=0,column=0, sticky="nswe")
+        #left_frame=CTkFrame(self.root)
+        #left_frame.grid(row=0,column=0, sticky="nswe")
         
-        right_frame=Frame(self.root, bg="blue")
-        right_frame.grid(row=0,column=1, sticky="nswe")
+        main_frame=Frame(self.root, bg="black")
+        main_frame.grid(row=0,column=0, sticky="nswe")
+        main_frame.rowconfigure(0,weight=0)
+        main_frame.rowconfigure(1,weight=1)
+        main_frame.columnconfigure(1,weight=0)
+        main_frame.columnconfigure((0,2),weight=1)
         
-        cameraframe=Frame(right_frame, bg="green",width=self.prev_width,height=self.prev_height)
-        cameraframe.grid(row=0,column=0)
+        cameraframe=Frame(main_frame, bg="green",width=self.prev_width,height=self.prev_height)
+        cameraframe.grid(row=0,column=1)
         # Label für die Videoanzeige
-        self.label_widget = Label(right_frame,borderwidth=0)
+        self.label_widget = Label(main_frame,borderwidth=0)
         
+        input_frame=CTkFrame(main_frame,fg_color="#1c1c1c",bg_color="#1c1c1c")
+        input_frame.grid(row=1,column=0,columnspan=3, sticky="nswe")
 
         # Button zum Starten des Streams
-        self.start_button = Button(left_frame, text="Open Camera", command=self.start_preview)
+        self.start_button = CTkButton(input_frame, text="Open Camera", command=self.start_preview)
         self.start_button.grid(row=0,column=0)
 
+        combo_items={"hallo", "nein", "doch"}
+        self.combo = CTkLabel(input_frame, width=100,fg_color="black",corner_radius=10, height=30,text="combo")#, command=lambda : self.open_combobox(self.combo, combo_items))
+        self.combo.grid(row=0,column=1)
+
+
+        testframe=CTkFrame(self.root,fg_color="grey",width=self.combo.cget("width"),height=100)
+        testframe.place(in_=self.combo,relx=0,rely=1,anchor="nw")
+
         #self.audio_thread = threading.Thread(target=self.update_text, daemon=True)
+    #def open_combobox(self, button, elements):
+
+
 
     def start_preview(self):
-        self.label_widget.grid(row=0,column=0)
+        self.label_widget.grid(row=0,column=1)
         self.open_camera()
         #self.update_text()
 
